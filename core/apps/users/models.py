@@ -5,7 +5,7 @@ from django.utils import timezone
 
 # Create your models here.
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser):
     USER_TYPE = [
         ('owner', 'Owner'),
         ('superuser', 'Superuser'),
@@ -15,8 +15,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField("email address", unique=True)
     is_active = models.BooleanField(default=True)
-    is_owner = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
+    is_owner = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
 
@@ -24,23 +24,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
-
-    groups = models.ManyToManyField(
-        'auth.Group',
-        verbose_name='groups',
-        blank=True,
-        related_name='user_set',
-        help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
-        related_query_name='user',
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        verbose_name='user permissions',
-        blank=True,
-        related_name='user_set',
-        help_text='Specific permissions for this user.',
-        related_query_name='user',
-    )
 
     def __str__(self):
         return self.email

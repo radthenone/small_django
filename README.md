@@ -24,3 +24,26 @@
 ```bash
     docker-compose up -d --build
 ```
+
+## endpoints
+
+| Methods | Permission | Url |
+| ----------- | ----------- | ----------- |
+| all apps | PublicPermission | [http://127.0.0.1:8000/api/docs/](http://127.0.0.1:8000/api/docs/) |
+| redoc apps | PublicPermission | [http://127.0.0.1:8000/api/redoc/](http://127.0.0.1:8000/api/redoc/) |
+| user create | AnonPermission | [http://127.0.0.1:8000/api/users/create/](http://127.0.0.1:8000/api/users/create/) |
+| user login | AnonPermission | [http://127.0.0.1:8000/api/users/login/](http://127.0.0.1:8000/api/users/login/) |
+| user logout | IsAuthenticated | [http://127.0.0.1:8000/api/users/logout/](http://127.0.0.1:8000/api/users/logout/) |
+| movies list | PublicPermission | [http://127.0.0.1:8000/api/movies/list/](http://127.0.0.1:8000/api/movies/list/) |
+| movies create | SuperuserPermission | [http://127.0.0.1:8000/api/movies/create/](http://127.0.0.1:8000/api/movies/create/) |
+| movies update | OwnerPermission | [http://127.0.0.1:8000/api/movies/update/{id}/](http://127.0.0.1:8000/api/movies/update/{id}/) |
+| movies detail | SuperuserPermission | [http://127.0.0.1:8000/api/movies/detail/{id}/](http://127.0.0.1:8000/api/movies/detail/{id}/) |
+| tag create | PublicPermission | [http://127.0.0.1:8000/api/movies/tag/create/](http://127.0.0.1:8000/api/movies/tag/create/) |
+| tag list | PublicPermission | [http://127.0.0.1:8000/api/movies/tags/](http://127.0.0.1:8000/api/movies/tags/) |
+| tag movie | PublicPermission | [http://127.0.0.1:8000/api/movies/tagged/{tag}/](http://127.0.0.1:8000/api/movies/tagged/{tag}/) |
+
+1. PublicPermission - available for any requests
+2. AnonPermission - available for anonymous requests
+3. IsAuthenticated - only logged requests
+4. SuperuserPermission - only superuser
+5. OwnerPermission - only owner

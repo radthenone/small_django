@@ -1,23 +1,38 @@
 from rest_framework import permissions
 
-class PublicCreate(permissions.BasePermission):
+class AnonPermission(permissions.BasePermission):
     edit_methods = ("CREATE")
+
+    def has_permission(self, request, view):
+        if request.user.is_anonymous:
+            return True
+        return False
 
     def has_object_permission(self, request, view, obj):
         if all([not request.user,request.method in self.edit_methods]):
             return True
         return False
 
-class OwnerLogin(permissions.BasePermission):
+class PublicPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return True
+
+class OwnerPermission(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        if request.user.is_authenticated and request.user.is_owner:
+                return True
+        return False
 
     def has_object_permission(self, request, view, obj):
-        if request.user.is_owner:
+        return bool(request.user.is_owner)
+
+class SuperuserPermission(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        if request.user.is_superuser and request.user.is_authenticated:
             return True
         return False
 
-class OnlySuperUser(permissions.BasePermission):
-
     def has_object_permission(self, request, view, obj):
-        if request.user.is_superuser:
-            return True
-        return False
+        return bool(request.user.is_superuser)

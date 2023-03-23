@@ -1,4 +1,4 @@
-from simple.settings.local import *  # noqa
+from settings.local import *  # noqa
 
 DATABASES = {
     'default': {

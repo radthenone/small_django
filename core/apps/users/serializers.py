@@ -1,21 +1,26 @@
 from rest_framework import serializers
 from apps.users.models import User
-from rest_framework.exceptions import AuthenticationFailed
+from django.contrib.auth.password_validation import validate_password
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'password', 'user_type']
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['id', 'email', 'password', 'password2', 'user_type']
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
+
+        return attrs
 
     def create(self, validated_data):
         user = User.objects.create_user(
             email=validated_data['email'],
             password=validated_data['password'],
             user_type=validated_data['user_type'],
-            is_owner=True
         )
 
         return user
@@ -23,25 +28,38 @@ class UserSerializer(serializers.ModelSerializer):
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(required=True, write_only=True)
+    class Meta:
+        model = User
+        fields = ['email', 'password']
 
     def validate(self, attrs):
-        email = attrs.get('email')
-        password = attrs.get('password')
+        email = attrs['email']
+        password = attrs['password']
 
         # Check if email and password are present
         if email and password:
-            # Check if the user exists
-            try:
-                user = User.objects.get(email=email)
-            except User.DoesNotExist:
-                raise AuthenticationFailed('Invalid email or password')
+            if User.objects.filter(email=email).exists():
+                try:
+                    user = User.objects.get(email=email)
+                except User.DoesNotExist:
+                    raise serializers.ValidationError({'email': 'Invalid email'})
 
-            # Check if the password is correct
-            if not user.check_password(password):
-                raise AuthenticationFailed('Invalid email or password')
+                # Check if the password is correct
+                if not user.check_password(password):
+                    raise serializers.ValidationError({'password': 'Invalid password'})
 
-            self.context['user'] = user
+                self.context['user'] = user
 
-            return attrs
+                return attrs
+            else:
+                raise serializers.ValidationError('Email not found')
         else:
-            raise AuthenticationFailed('Email and password are required')
+            raise serializers.ValidationError(
+                {
+                    'email': 'Email required',
+                    'password': 'Password required',
+                }
+            )
+
+class UserLogoutSerializer(serializers.Serializer):
+    None
