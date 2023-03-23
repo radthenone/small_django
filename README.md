@@ -47,3 +47,14 @@
 3. IsAuthenticated - only logged requests
 4. SuperuserPermission - only superuser
 5. OwnerPermission - only owner
+
+## postgres
+connect to dbeaver
+
+```env
+    Host : localhost
+    Port : 5433
+    Database : simple_app
+    Username : simple_app
+    Password : django-simple-app
+```
