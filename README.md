@@ -22,6 +22,7 @@
     poetry shell
     poetry install
     poetry export -f requirements.txt --output requirements.txt
+    poetry run python manage.py migrate
     poetry run python manage.py runserver
 ```
 
