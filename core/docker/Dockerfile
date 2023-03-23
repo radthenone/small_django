@@ -37,7 +37,7 @@ ARG APP_HOME=/src
 WORKDIR ${APP_HOME}
 
 # Copy the poetry.lock and pyproject.toml files.
-COPY ./pyproject.toml ./
+COPY ./poetry.lock ./pyproject.toml ./
 
 # Install poetry
 COPY ./requirements.txt .
