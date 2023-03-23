@@ -9,6 +9,12 @@
 | Poetry | 1.3.2 | [link](https://python-poetry.org/docs/#installation) |
 | DBeaver | 22.3.4 | [link](https://dbeaver.io/download)
 
+## clone the project
+
+```bash
+    git clone https://github.com/radthenone/small_django small_django
+```
+
 ## poetry
 
 ```bash
