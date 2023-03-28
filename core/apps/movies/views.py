@@ -3,7 +3,6 @@ from rest_framework import generics
 from apps.movies.models import Movie, Tag
 from apps.movies.serializers import MovieSerializer, TagSerializer
 from apps.users.permissions import PublicPermission, OwnerPermission, SuperuserPermission
-from rest_framework import permissions
 
 # Create your views here.
 
