@@ -14,10 +14,18 @@ class MovieSerializer(serializers.ModelSerializer):
     tags = serializers.PrimaryKeyRelatedField(many=True, queryset=Tag.objects.all())
     user = serializers.SerializerMethodField()
 
-    def get_user(self, user):
-        users = User.objects.filter(pk=user.pk)
-        serializer = UserSerializer(users, many=True)
-        return serializer.data
+    def get_user(self, movie):
+        user = movie.user
+        return {
+            'user_type': user.user_type,
+            'email': user.email
+        }
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['user'] = self.get_user(instance)
+        return rep
+
     class Meta:
         model = Movie
         fields = [
